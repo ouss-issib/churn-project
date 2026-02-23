@@ -1,4 +1,4 @@
-name: churn-mlops-local-test
+name: churn-imbalanced-dataset
 on: [push]
 permissions: write-all
 jobs:
@@ -7,31 +7,53 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
       - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-
       - name: Set up CML
         uses: iterative/setup-cml@v2
-
-      - name: Install dependencies
+      - name: Install Python deps
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install "dvc==3.63.0"
-
-      - name: Train and Eval
+          pip install "dvc[s3]==3.63.0"
+      - name: DVC pull (restore data/models depuis S3)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         run: |
-          # Simulation de l'entraînement dans la CI
+          dvc pull || echo "No remote cache yet"
+      - name: Train / Eval / Push artifacts
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        run: |
+          # 1. Entrainement local du modèle
           python script.py
-
+          # 2. Versionner les outputs data/ et models/ avec DVC
+          dvc add data models
+          # 3. Committer les .dvc générés
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add data.dvc models.dvc || true
+          [ -f dvc.lock ] && git add dvc.lock
+          git commit -m "Update data/models [skip ci]" || echo "nothing to commit"
+          # 4. Pousser les blobs vers S3
+          dvc push
       - name: Publish CML report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "## Metrics" > report.md
-          cat metrics.txt >> report.md
+          awk 'NR%4{print " "$0}{print ""}' metrics.txt >> report.md
           echo "## Confusion Matrix" >> report.md
           echo "![](./conf_matrix.png)" >> report.md
+          # commentaire automatique sur le commit / PR
           cml comment create --pr report.md
