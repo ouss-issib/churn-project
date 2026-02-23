@@ -1,6 +1,5 @@
 [core]
-    remote = gdrive-remote
-['remote "local-remote"']
-    url = /tmp/dvc-storage
-['remote "gdrive-remote"']
-    url = gdrive://140rhEIRJza1Lza3jBCwTpqyqgbb-AYBb
+    remote = dvc-remote
+['remote "dvc-remote"']
+    url = s3://my-s3-dvc-ouss-issib/dvc-storage
+    region = eu-north-1
