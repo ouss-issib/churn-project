@@ -1,5 +1,8 @@
 [core]
-    remote = dvc-remote
+    remote = my-s3-remote
 ['remote "dvc-remote"']
+    url = s3://my-s3-dvc-ouss-issib/dvc-storage
+    region = eu-north-1
+['remote "my-s3-remote"']
     url = s3://my-s3-dvc-ouss-issib/dvc-storage
     region = eu-north-1
