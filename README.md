@@ -1,7 +1,7 @@
 # 🧩 Atelier Pratique – MLOps de bout en bout DVC + S3 + GitHub Actions + CML
 
-[cite_start]Ce dépôt présente une implémentation complète d’une boucle **MLOps** de bout en bout pour la détection du Churn [cite: 775-778].  
-Cette activité pratique est réalisée dans le cadre du cours **DevOps & MLOps** encadré par **Pr. [cite_start]Soufiane HAMIDA**[cite: 779].
+Ce dépôt présente une implémentation complète d’une boucle **MLOps** de bout en bout pour la détection du Churn .  
+Cette activité pratique est réalisée dans le cadre du cours **DevOps & MLOps** encadré par **Pr.Soufiane HAMIDA**.
 
 ## 📘 Aperçu du projet
 
