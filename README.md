@@ -6,46 +6,45 @@ Cette activité pratique est réalisée dans le cadre du cours **DevOps & MLOps*
 ## 📘 Aperçu du projet
 
 ### Pipeline MLOps
-- [cite_start]**Objectif** : Construire un système automatisé de gestion du cycle de vie d'un modèle ML (Versionnage, Entraînement, Déploiement) [cite: 781-789].
+- **Objectif** : Construire un système automatisé de gestion du cycle de vie d'un modèle ML (Versionnage, Entraînement, Déploiement).
 - **Technologies Utilisées** :
-  - [cite_start]Python 3.11 [cite: 803]
-  - [cite_start]DVC (Data Version Control) [cite: 807]
-  - [cite_start]AWS S3 (Stockage des artefacts) [cite: 782]
-  - [cite_start]GitHub Actions (Automatisation CI/CD) [cite: 785]
-  - [cite_start]CML (Continuous Machine Learning) [cite: 789]
-  - [cite_start]Scikit-Learn & Imbalanced-learn [cite: 805, 806]
+  - Python 3.11
+  - DVC (Data Version Control)
+  - AWS S3 (Stockage des artefacts)
+  - GitHub Actions (Automatisation CI/CD)
+  - CML (Continuous Machine Learning)
+  - Scikit-Learn & Imbalanced-learn
 
 ---
 
 ## 🧱 Structure du projet
 
-[cite_start]├── .dvc/               # Configuration du stockage distant S3 [cite: 944]
-[cite_start]├── .github/workflows/  # Pipeline CI/CD (GitHub Actions) [cite: 945]
+├── .dvc/                # Configuration du stockage distant S3
+├── .github/workflows/  # Pipeline CI/CD (GitHub Actions)
 ├── captures/           # Captures d'écran des résultats
-[cite_start]├── data/               # Datasets versionnés par DVC [cite: 810]
-[cite_start]├── models/             # Modèles entraînés et métriques [cite: 811]
-[cite_start]├── script.py           # Script d'entraînement (Logistic Regression) [cite: 809]
-[cite_start]└── requirements.txt    # Dépendances du projet [cite: 891]
+├── data/               # Datasets versionnés par DVC
+├── models/             # Modèles entraînés et métriques
+├── script.py           # Script d'entraînement (Logistic Regression)
+└── requirements.txt    # Dépendances du projet
 
 ---
 
 ## 📦 Gestion des Artefacts (DVC + S3)
 
 ### 📂 Versionnage des Données
-DVC permet de tracker les datasets volumineux. [cite_start]Les fichiers réels sont stockés sur AWS S3, tandis que Git ne conserve que les fichiers `.dvc` (pointeurs)[cite: 935, 943].
+DVC permet de tracker les datasets volumineux. Les fichiers réels sont stockés sur AWS S3, tandis que Git ne conserve que les fichiers `.dvc` (pointeurs).
 
 ### ☁️ Remote Storage – AWS S3
-[cite_start]Le stockage est centralisé sur un bucket S3 avec une politique d'accès restreinte (IAM) pour garantir la sécurité des modèles[cite: 815, 846].
-
+Le stockage est centralisé sur un bucket S3 avec une politique d'accès restreinte (IAM) pour garantir la sécurité des modèles.
 ---
 
 ## 🌐 Pipeline CI/CD – GitHub Actions
 
 Le workflow automatisé effectue les tâches suivantes à chaque push :
-- [cite_start]**Restauration** : Récupération des données depuis S3 via `dvc pull` [cite: 990-993].
-- [cite_start]**Exécution** : Ré-entraînement du modèle avec `script.py` [cite: 997-998].
-- [cite_start]**Mise à jour** : Versionnage des nouveaux artefacts et push vers S3 [cite: 1006-1013].
-- [cite_start]**Reporting** : Génération d'un rapport de performance via CML [cite: 1014-1023].
+- **Restauration** : Récupération des données depuis S3 via `dvc pull`.
+- **Exécution** : Ré-entraînement du modèle avec `script.py`.
+- **Mise à jour** : Versionnage des nouveaux artefacts et push vers S3.
+- **Reporting** : Génération d'un rapport de performance via CML.
 
 ---
 
